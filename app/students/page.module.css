@@ -46,7 +46,7 @@
   .table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    background-color: rgb(5, 4, 4);
     border-radius: 8px;
     overflow: hidden;
   }

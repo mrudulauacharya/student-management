@@ -1,7 +1,7 @@
 "use client"; // Required for React hooks in App Router
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import supabase from "../../../lib/supabase";
+import supabase from "../../lib/supabase";
 import styles from "./create.module.css"; // Import fixed CSS module
 
 const CreateStudent = () => {
@@ -26,7 +26,7 @@ const CreateStudent = () => {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.from("students").insert([student]);
+    const { error } = await supabase.from("student").insert([student]);
 
     if (error) {
       setError(error.message);

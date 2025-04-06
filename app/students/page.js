@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import supabase from "../../lib/supabase";
+import supabase from "../lib/supabase";
 import styles from "./page.module.css";
 
 export default function StudentsPage() {
@@ -9,18 +9,29 @@ export default function StudentsPage() {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      const { data } = await supabase.from("students").select("*");
-      setStudents(data || []);
+      const { data, error } = await supabase.from("student").select("*");
+
+      if (error) {
+        console.error("❌ Error fetching students:", error.message);
+      } else {
+        console.log("✅ Students fetched:", data);
+        setStudents(data);
+      }
     };
 
     fetchStudents();
 
-    // Real-time subscription to listen for new students added
+    // ✅ Listen for new inserts in the 'student' table
     const subscription = supabase
-      .channel("students")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "students" }, (payload) => {
-        setStudents((prev) => [...prev, payload.new]);
-      })
+      .channel("student")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "student" },
+        (payload) => {
+          console.log("➕ New student inserted:", payload.new);
+          setStudents((prev) => [...prev, payload.new]);
+        }
+      )
       .subscribe();
 
     return () => {
